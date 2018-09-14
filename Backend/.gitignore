@@ -1,0 +1,12 @@
+vendor/
+config.php
+composer.lock
+
+# Editor directories and files
+.idea
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
