@@ -111,7 +111,7 @@
                 var user = {}
                 user.userName = data.userInfo.username
                 user.email = data.userInfo.email
-                user.positon = data.userInfo.position
+                user.position = data.userInfo.position
                 user.token = data.token
                 this.$store.commit('ADD_COUNT', user)
                 let redirect = decodeURIComponent(this.$route.query.redirect || '/')
@@ -120,7 +120,9 @@
                 })
               }
             }
-          )
+          ).catch(function (error) {
+            console.log(error)
+          })
         }
       }
     }

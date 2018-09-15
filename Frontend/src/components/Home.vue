@@ -8,7 +8,10 @@
           <v-card>
             <v-card-title primary class="title">Home</v-card-title>
             <v-card-text>
-              Hello world!
+              You are login as "{{$store.state.userName}}"
+            </v-card-text>
+            <v-card-text>
+              Your position is "{{$store.state.position}}"
             </v-card-text>
           </v-card>
         </v-flex>

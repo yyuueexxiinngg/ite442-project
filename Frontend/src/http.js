@@ -11,7 +11,7 @@ axios.interceptors.request.use(
   config => {
     store.state.isLoading = true
     if (store.state.token) {
-      config.headers.Authorization = `token ${store.state.token}`
+      config.headers.Authorization = store.state.token
     }
     return config
   },
@@ -43,10 +43,7 @@ axios.interceptors.response.use(
       }
     }
     // console.log(JSON.stringify(error));//console : Error: Request failed with status code 402
-    return Promise.reject(error.response.data)
-  },
-  () => {
-    store.state.isLoading = false
+    return Promise.reject(error)
   }
 )
 

@@ -12,8 +12,10 @@ Vue.prototype.axios = axios
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  store.state.token = sessionStorage.getItem('token') // 获取本地存储的token
-
+  store.state.token = sessionStorage.getItem('token')
+  store.state.userName = sessionStorage.getItem('userName')
+  store.state.position = sessionStorage.getItem('position')
+  store.state.email = sessionStorage.getItem('email')
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
     if (store.state.token !== null && store.state.token !== '') {  // 通过vuex state获取当前的token是否存
       next()

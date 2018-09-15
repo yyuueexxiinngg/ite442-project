@@ -48,7 +48,7 @@ define('DB_NAME','');
 
 ## TODO *Needs to update after decide all pages*
 ### Backend
-- [ ] Login
+- [x] Login
 - [ ] View
     - [ ] Receipt
     - [ ] Repair Status
@@ -64,6 +64,7 @@ define('DB_NAME','');
 - [ ] Repair Status
 
 ### Employee
+- [x] Login
 - [ ] Receipt
 - [ ] Repair Status
 - [ ] In Progress

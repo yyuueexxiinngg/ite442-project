@@ -34,7 +34,7 @@
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title v-text="title" class="white--text"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn flat @click="redirect('login')">Login</v-btn>
+      <v-btn flat @click="logFunc">{{this.$store.state.token? 'LOGOUT':'LOGIN'}}</v-btn>
     </v-toolbar>
     <main>
       <v-content>
@@ -113,15 +113,19 @@
         logoutDialog: false
       }
     },
-    watch: {
-      // call again the method if the route changes
-      '$route': 'fetchData'
-    },
     created () {
     },
     methods: {
       redirect (routeName) {
         this.$router.push({name: routeName})
+      },
+      logFunc () {
+        if (this.$store.state.token !== '' && this.$store.state.token !== null) {
+          this.$store.commit('REMOVE_COUNT', this.$store.state.token)
+          this.redirect('login')
+        } else {
+          this.redirect('login')
+        }
       }
     },
     mounted () {

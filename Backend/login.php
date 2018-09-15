@@ -7,9 +7,7 @@
  */
 
 require dirname(__FILE__) . '/backend_helper.php';
-
 use \Firebase\JWT\JWT;
-
 class Login extends mysql_helper
 {
     public function __construct()
@@ -56,15 +54,15 @@ $login = new Login();
 $result = $login->login($username, $password);
 if ($result['status'] == 'success') {
     $issuedAt = time();
-    $expirationTime = $issuedAt + 60;
+    $expirationTime = $issuedAt + 600;
     $payload = array(
         'username' => $result["userInfo"]['username'],
         'position' => $result["userInfo"]['position'],
         'iat' => $issuedAt,
         'exp' => $expirationTime
     );
-    $key = "ite442_project";
-    $alg = 'HS256';
+    $key = SECRET_KEY;
+    $alg = ALGORITHM;
     $jwt = JWT::encode($payload, $key, $alg);
 
     $result['token'] = $jwt;

@@ -7,6 +7,12 @@
  */
 require dirname(__FILE__) . '/config.php';
 require __DIR__ . '/vendor/autoload.php';
+
+use \Firebase\JWT\JWT;
+
+define('SECRET_KEY', 'ite442_project');
+define('ALGORITHM', 'HS256');
+
 class mysql_helper
 {
     public $conn;
@@ -43,12 +49,18 @@ class mysql_helper
 
     public function close(MySQLi $conn = null)
     {
-        if($conn){
+        if ($conn) {
             $conn->close();
-        } else{
+        } else {
             $this->conn->close();
         }
     }
+}
+
+class position {
+    const ADMIN = 'admin';
+    const EMPLOYEE = 'employee';
+    const CUSTOMER = 'customer';
 }
 
 // Adding header for allowing access from different origin
@@ -66,4 +78,67 @@ header('Content-type: application/json');
 // Axios would perform post twice, the second one is the real request. First request with option header for testing the headers.
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit();
+}
+
+// Function to get headers, considering both apache and nginx
+if (!function_exists('apache_request_headers')) {
+    function apache_request_headers()
+    {
+        $return = array();
+        foreach ($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) == "HTTP_") {
+                $key = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($key, 5)))));
+                $return[$key] = $value;
+            } else {
+                $return[$key] = $value;
+            }
+        }
+        return $return;
+    }
+}
+
+function checkAuth($position_need = null)
+{
+    $token = apache_request_headers()['Authorization'];
+    if (!$token) {
+        if($position_need != null){
+            header("HTTP/1.1 401 Unauthorized");
+            echo json_encode(array("status" => "error", "errorType" => "401", "msg" => "No access token. Access denied"));
+            exit();
+        }else {
+            return false;
+        }
+    } else {
+        $key = SECRET_KEY;
+        $alg = array(ALGORITHM);
+        try {
+            $decoded = JWT::decode($token, $key, $alg);
+            $decoded_array = (array) $decoded;
+            $position_auth = $decoded_array['position'];
+
+            if($position_need == null){
+                return $decoded_array;
+            }else {
+                if ($position_need == "admin" && $position_auth == "admin") {
+                    return true;
+                } else if($position_need == "employee" && ($position_auth == "employee" || $position_auth == "admin")){
+                    return true;
+                } else if ($position_need == "customer") {
+                    return true;
+                } else {
+                    echo json_encode(array("status" => "error", "errorType" => "401", "msg" => "No enough permission, access denied"));
+                    exit();
+                }
+            }
+        } catch (Exception $ex) {
+            if($position_need != null){
+                header("HTTP/1.1 401 Unauthorized");
+                echo json_encode(array("status" => "error", "errorType" => "401", "msg" =>$ex->getMessage()));
+                exit();
+            }else {
+                return false;
+            }
+        }
+
+    }
 }
