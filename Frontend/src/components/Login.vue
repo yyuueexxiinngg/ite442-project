@@ -24,6 +24,15 @@
           </v-img>
         </v-flex>
         <v-flex xs8 md6>
+          <v-alert
+            :value="true"
+            color="error"
+            icon="warning"
+            outline
+            v-if="$store.state.authAlert"
+          >
+            {{$store.state.authAlert}}
+          </v-alert>
           <v-form ref="form" v-model="valid">
             <v-text-field
               v-model="username"
@@ -98,6 +107,7 @@
           var data = new URLSearchParams()
           data.append('username', this.username)
           data.append('password', this.password)
+          this.$store.state.authAlert = ''
           this.axios.post('login.php', data).then(
             (res) => {
               var data = res.data
@@ -120,7 +130,8 @@
                 })
               }
             }
-          ).catch(function (error) {
+          ).catch((error) => {
+            this.$store.state.authAlert = error.toString()
             console.log(error)
           })
         }

@@ -2,11 +2,11 @@ import axios from 'axios'
 import store from '../store/store'
 import router from './router'
 
-// axios 配置
+// axios config
 axios.defaults.timeout = 5000
 axios.defaults.baseURL = process.env.API_HOST
 
-// http request 拦截器
+// http request interceptor
 axios.interceptors.request.use(
   config => {
     store.state.isLoading = true
@@ -20,7 +20,7 @@ axios.interceptors.request.use(
   },
 )
 
-// http response 拦截器
+// axios response interceptor
 axios.interceptors.response.use(
   response => {
     store.state.isLoading = false
@@ -31,10 +31,10 @@ axios.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          // 401 清除token信息并跳转到登录页面
+          // 401 Unauthorized header, remove the saved token and redirect to login page
           store.commit('REMOVE_COUNT', store.state.token)
 
-          // 只有在当前路由不是登录页面才跳转
+          // Redirect if current page is not login page
           router.currentRoute.path !== 'login' &&
           router.replace({
             path: 'login',

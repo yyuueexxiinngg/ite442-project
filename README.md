@@ -63,7 +63,7 @@ define('DB_NAME','');
 - [ ] Receipt
 - [ ] Repair Status
 
-### Employee
+#### Employee
 - [x] Login
 - [ ] Receipt
 - [ ] Repair Status
@@ -73,6 +73,9 @@ define('DB_NAME','');
 - [ ] Create Repair Form
 - [ ] Custom
 
-### Manager
+#### Manager
 - [ ] Manager Page
+
+### License
+[PrintJS](https://github.com/crabbly/Print.js/blob/master/LICENSE)
 

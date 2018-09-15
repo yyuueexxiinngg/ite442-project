@@ -34,7 +34,7 @@
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title v-text="title" class="white--text"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn flat @click="logFunc">{{this.$store.state.token? 'LOGOUT':'LOGIN'}}</v-btn>
+      <v-btn flat @click="logFunc">{{this.$store.state.token ? 'LOGOUT' : 'LOGIN'}}</v-btn>
     </v-toolbar>
     <main>
       <v-content>
@@ -100,11 +100,9 @@
     data () {
       return {
         clipped: true,
-        drawer: false, // Auto open the navigation drawer
+        drawer: true, // Auto open the navigation drawer
         fixed: true,
-        items: [
-          {title: 'Home', icon: 'dashboard', route: 'home'}
-        ],
+        items: [],
         miniVariant: false,
         right: true,
         rightDrawer: false,
@@ -129,6 +127,16 @@
       }
     },
     mounted () {
+      this.$router.options.routes.forEach(route => {
+        if (!route.meta.notInNav) {
+          this.items.push({
+            title: route.meta.title,
+            icon: route.meta.icon,
+            route: route.name,
+            permission: route.meta.requireAuth
+          })
+        }
+      })
     }
   }
 </script>

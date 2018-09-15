@@ -10,7 +10,8 @@ export default new Vuex.Store({
     token: '',
     userName: '',
     position: '',
-    isLoading: false
+    isLoading: false,
+    authAlert: ''
   },
   mutations: {
     // Login

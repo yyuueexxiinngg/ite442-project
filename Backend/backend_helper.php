@@ -57,7 +57,8 @@ class mysql_helper
     }
 }
 
-class position {
+class position
+{
     const ADMIN = 'admin';
     const EMPLOYEE = 'employee';
     const CUSTOMER = 'customer';
@@ -101,11 +102,11 @@ function checkAuth($position_need = null)
 {
     $token = apache_request_headers()['Authorization'];
     if (!$token) {
-        if($position_need != null){
+        if ($position_need != null) {
             header("HTTP/1.1 401 Unauthorized");
             echo json_encode(array("status" => "error", "errorType" => "401", "msg" => "No access token. Access denied"));
             exit();
-        }else {
+        } else {
             return false;
         }
     } else {
@@ -113,15 +114,17 @@ function checkAuth($position_need = null)
         $alg = array(ALGORITHM);
         try {
             $decoded = JWT::decode($token, $key, $alg);
-            $decoded_array = (array) $decoded;
+            $decoded_array = (array)$decoded;
             $position_auth = $decoded_array['position'];
 
-            if($position_need == null){
+            if ($position_need == null) {
                 return $decoded_array;
-            }else {
+            } else {
                 if ($position_need == "admin" && $position_auth == "admin") {
                     return true;
-                } else if($position_need == "employee" && ($position_auth == "employee" || $position_auth == "admin")){
+                } else if ($position_need == "manager" && ($position_auth == "manager" || $position_auth == "admin")) {
+                    return true;
+                } else if ($position_need == "employee" && ($position_auth == "manager" || $position_auth == "employee" || $position_auth == "admin")) {
                     return true;
                 } else if ($position_need == "customer") {
                     return true;
@@ -131,11 +134,11 @@ function checkAuth($position_need = null)
                 }
             }
         } catch (Exception $ex) {
-            if($position_need != null){
+            if ($position_need != null) {
                 header("HTTP/1.1 401 Unauthorized");
-                echo json_encode(array("status" => "error", "errorType" => "401", "msg" =>$ex->getMessage()));
+                echo json_encode(array("status" => "error", "errorType" => "401", "msg" => $ex->getMessage()));
                 exit();
-            }else {
+            } else {
                 return false;
             }
         }

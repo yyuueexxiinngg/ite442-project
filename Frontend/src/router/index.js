@@ -2,9 +2,13 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
+import Receipt from '@/components/Receipt'
+import Repair_Status from '@/components/Repair_Status'
+import store from '../../store/store'
+
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   mode: 'history',
   routes: [
     {
@@ -12,13 +16,78 @@ export default new Router({
       name: 'home',
       component: Home,
       meta: {
-        requireAuth: true  // Require login to view the page or not
+        requireAuth: 'customer',  // Require login to view the page or not
+        title: 'Home',
+        icon: 'home'
       }
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      meta: {
+        title: 'Login',
+        icon: 'dashboard',
+        notInNav: true
+      }
+    },
+    {
+      path: '/receipt',
+      name: 'receipt',
+      component: Receipt,
+      meta: {
+        title: 'Receipt',
+        icon: 'receipt'
+      }
+    },
+    {
+      path: '/repair_status',
+      name: 'repair_status',
+      component: Repair_Status,
+      meta: {
+        title: 'Repair Status',
+        icon: 'timeline'
+      }
     }
   ]
 })
+
+// Before entering the router
+router.beforeEach((to, from, next) => {
+  // get token and position from session storge
+  store.state.token = sessionStorage.getItem('token')
+  store.state.userName = sessionStorage.getItem('userName')
+  store.state.position = sessionStorage.getItem('position')
+  store.state.email = sessionStorage.getItem('email')
+  if (to.meta.requireAuth) {  // Check is the router needs permission
+    if ((store.state.token !== null && store.state.token !== '') || to.meta.requireAuth === 'customer') {  // Check if the token exist
+      let require = to.meta.requireAuth
+      let loginPosition = store.state.position
+      if (require === 'admin' && loginPosition === 'admin') {
+        next()
+      } else if (require === 'manager' && (loginPosition === 'manager' || loginPosition === 'admin')) {
+        next()
+      } else if (require === 'employee' && (loginPosition === 'manager' || loginPosition === 'employee' || loginPosition === 'admin')) {
+        next()
+      } else if (require === 'customer') {
+        next()
+      } else {
+        store.state.authAlert = 'No enough permission, ' + require + ' needed, but you currently login as ' + loginPosition
+        next({
+          path: '/login',
+          query: {redirect: to.fullPath}  // Redirect to entry after login
+        })
+      }
+    } else {
+      store.state.authAlert = 'Require ' + to.meta.requireAuth + ' permission to view the page, please login.'
+      next({
+        path: '/login',
+        query: {redirect: to.fullPath}  // Redirect to entry after login
+      })
+    }
+  } else {
+    next()
+  }
+})
+
+export default router
