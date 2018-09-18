@@ -9,6 +9,7 @@ axios.defaults.baseURL = process.env.API_HOST
 // http request interceptor
 axios.interceptors.request.use(
   config => {
+    store.state.generalAlert = ''
     store.state.isLoading = true
     if (store.state.token) {
       config.headers.Authorization = store.state.token
@@ -16,6 +17,7 @@ axios.interceptors.request.use(
     return config
   },
   err => {
+    store.state.generalAlert = err.toString()
     return Promise.reject(err)
   },
 )
@@ -27,6 +29,7 @@ axios.interceptors.response.use(
     return response
   },
   error => {
+    store.state.generalAlert = error.toString()
     store.state.isLoading = false
     if (error.response) {
       switch (error.response.status) {

@@ -13,7 +13,7 @@ abstract class AbstractView extends mysql_helper
     // Function to show teammates. Would remove for actual development
     abstract protected function getFuncDemo();
 
-    abstract protected function getReceipt($repair_id);
+    abstract protected function getReceipt();
 
     // Init parent constructor to connect to the DB
     public function __construct()
@@ -29,9 +29,28 @@ abstract class AbstractView extends mysql_helper
 
 class View extends AbstractView
 {
-    public function getReceipt($repair_id)
+
+    /**
+     * Get receipt info from receipt view
+     * @param request $_POST ['request'] What is the request for
+     * @param pro_number $_POST ['pro_number'] pro_number requset bt receipt_v
+     * @return array of first matching row
+     */
+    public function getReceipt()
     {
-        // TODO: Implement getReceipt() method.
+        checkAuth(position::CUSTOMER);
+        checkParameters('pro_number');
+        $pro_number = $_POST['pro_number'];
+        $pro_number = mysqli_real_escape_string($this->conn, $pro_number);
+        $query = "SELECT * FROM receipt_v WHERE pro_number = '$pro_number'";
+        $data = $this->query($query);
+
+        if ($data) {
+            return $data->fetch_assoc();
+        } else {
+            badRequest();
+            return array("status" => "error", "errorType" => "400", "msg" => "No such pro number");
+        }
     }
 
     public function getFuncDemo()
@@ -50,12 +69,25 @@ class View extends AbstractView
     }
 }
 
+// Change this to true if you are just testing
+$dev = false;
 
-// Get input repair form id
-//$repair_id = $_POST["id"];
-// Start to init the program
+if ($dev) {
+    $_POST['request'] = 'receipt';
+    $_POST['pro_number'] = 'PR18/002';
+}
+
+checkParameters('request');
+
+$request = $_POST['request'];
 $view = new View();
 
-var_dump($view->getFuncDemo());
+switch ($request) {
+    case 'receipt':
+        echo json_encode($view->getReceipt());
+}
+
 
 $view->close();
+//$repair_id = $_POST["id"];
+// Start to init the program

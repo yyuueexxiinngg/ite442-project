@@ -47,6 +47,7 @@ class Login extends mysql_helper
     }
 }
 
+checkParameters(['username','password']);
 $username = $_POST['username'];
 $password = $_POST['password'];
 
@@ -54,7 +55,8 @@ $login = new Login();
 $result = $login->login($username, $password);
 if ($result['status'] == 'success') {
     $issuedAt = time();
-    $expirationTime = $issuedAt + 600;
+//    $expirationTime = $issuedAt + 60 * 60 * 24 * 365 * 100;
+    $expirationTime = $issuedAt + 60 * 10;
     $payload = array(
         'username' => $result["userInfo"]['username'],
         'position' => $result["userInfo"]['position'],

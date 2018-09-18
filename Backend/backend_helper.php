@@ -12,7 +12,8 @@ use \Firebase\JWT\JWT;
 
 define('SECRET_KEY', 'ite442_project');
 define('ALGORITHM', 'HS256');
-
+$dev = false;
+//error_reporting(0);
 class mysql_helper
 {
     public $conn;
@@ -60,6 +61,7 @@ class mysql_helper
 class position
 {
     const ADMIN = 'admin';
+    const MANAGER = 'manager';
     const EMPLOYEE = 'employee';
     const CUSTOMER = 'customer';
 }
@@ -100,6 +102,13 @@ if (!function_exists('apache_request_headers')) {
 
 function checkAuth($position_need = null)
 {
+    global $dev;
+    if($dev){
+        return true;
+    }
+    if($position_need == position::CUSTOMER) {
+        return true;
+    }
     $token = apache_request_headers()['Authorization'];
     if (!$token) {
         if ($position_need != null) {
@@ -120,13 +129,13 @@ function checkAuth($position_need = null)
             if ($position_need == null) {
                 return $decoded_array;
             } else {
-                if ($position_need == "admin" && $position_auth == "admin") {
+                if ($position_need == position::ADMIN && $position_auth == position::ADMIN) {
                     return true;
-                } else if ($position_need == "manager" && ($position_auth == "manager" || $position_auth == "admin")) {
+                } else if ($position_need == position::MANAGER && ($position_auth == position::MANAGER || $position_auth == position::ADMIN)) {
                     return true;
-                } else if ($position_need == "employee" && ($position_auth == "manager" || $position_auth == "employee" || $position_auth == "admin")) {
+                } else if ($position_need == position::EMPLOYEE && ($position_auth == position::MANAGER || $position_auth == position::EMPLOYEE || $position_auth == position::ADMIN)) {
                     return true;
-                } else if ($position_need == "customer") {
+                } else if ($position_need == position::CUSTOMER) {
                     return true;
                 } else {
                     echo json_encode(array("status" => "error", "errorType" => "401", "msg" => "No enough permission, access denied"));
@@ -144,4 +153,28 @@ function checkAuth($position_need = null)
         }
 
     }
+}
+
+function checkParameters($parameters)
+{
+    if (!is_array($parameters)) {
+        if (!isset($_POST[$parameters])) {
+            header("HTTP/1.1 400 Bad Request");
+            echo json_encode(array("status" => "error", "errorType" => "400", "msg" => "Parameters incorrect"));
+            exit();
+        }
+    } else {
+        foreach ($parameters as $param) {
+            if (!isset($_POST[$param])) {
+                header("HTTP/1.1 400 Bad Request");
+                echo json_encode(array("status" => "error", "errorType" => "400", "msg" => "Parameters incorrect"));
+                exit();
+            }
+        }
+    }
+
+}
+
+function badRequest() {
+    header("HTTP/1.1 400 Bad Request");
 }

@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import Login from '@/components/Login'
 import Receipt from '@/components/Receipt'
 import Repair_Status from '@/components/Repair_Status'
+import Create_Repair_Form from '@/components/Create_Repair_Form'
 import store from '../../store/store'
 
 Vue.use(Router)
@@ -48,6 +49,15 @@ let router = new Router({
         title: 'Repair Status',
         icon: 'timeline'
       }
+    },
+    {
+      path: '/create_repair_form',
+      name: 'create_repair_form',
+      component: Create_Repair_Form,
+      meta: {
+        title: 'Create Repair Form',
+        icon: 'timeline'
+      }
     }
   ]
 })
@@ -72,14 +82,14 @@ router.beforeEach((to, from, next) => {
       } else if (require === 'customer') {
         next()
       } else {
-        store.state.authAlert = 'No enough permission, ' + require + ' needed, but you currently login as ' + loginPosition
+        store.state.generalAlert = 'No enough permission, ' + require + ' needed, but you currently login as ' + loginPosition
         next({
           path: '/login',
           query: {redirect: to.fullPath}  // Redirect to entry after login
         })
       }
     } else {
-      store.state.authAlert = 'Require ' + to.meta.requireAuth + ' permission to view the page, please login.'
+      store.state.generalAlert = 'Require ' + to.meta.requireAuth + ' permission to view the page, please login.'
       next({
         path: '/login',
         query: {redirect: to.fullPath}  // Redirect to entry after login

@@ -29,9 +29,9 @@
             color="error"
             icon="warning"
             outline
-            v-if="$store.state.authAlert"
+            v-if="$store.state.generalAlert"
           >
-            {{$store.state.authAlert}}
+            {{$store.state.generalAlert}}
           </v-alert>
           <v-form ref="form" v-model="valid">
             <v-text-field
@@ -107,7 +107,6 @@
           var data = new URLSearchParams()
           data.append('username', this.username)
           data.append('password', this.password)
-          this.$store.state.authAlert = ''
           this.axios.post('login.php', data).then(
             (res) => {
               var data = res.data
@@ -131,7 +130,6 @@
               }
             }
           ).catch((error) => {
-            this.$store.state.authAlert = error.toString()
             console.log(error)
           })
         }

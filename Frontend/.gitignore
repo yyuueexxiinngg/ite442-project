@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log
 yarn.lock
+idea-fix.js
 
 # Editor directories and files
 .idea

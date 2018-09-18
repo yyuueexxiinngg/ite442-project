@@ -50,7 +50,7 @@ define('DB_NAME','');
 ### Backend
 - [x] Login
 - [ ] View
-    - [ ] Receipt
+    - [x] Receipt
     - [ ] Repair Status
     - [ ] In Progress
     - [ ] Repair Order
@@ -60,7 +60,7 @@ define('DB_NAME','');
 
 ### Frontend
 #### Customer
-- [ ] Receipt
+- [x] Receipt
 - [ ] Repair Status
 
 #### Employee
