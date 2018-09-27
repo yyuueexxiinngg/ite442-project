@@ -56,6 +56,31 @@ class mysql_helper
             $this->conn->close();
         }
     }
+
+    public function getAllRow($table, $columns = array('*'))
+    {
+        $select = $columns[0];
+        foreach ($columns as $idx => $col) {
+            if ($idx == 0) {
+                continue;
+            }
+            $select = $select . ",$col";
+        }
+
+        $query = "SELECT $select FROM `$table`";
+        $data = $this->query($query);
+
+        if ($data) {
+            $return = array();
+            while ($row = $data->fetch_assoc()) {
+                $return[] = $row;
+            }
+            return $return;
+        } else {
+            badRequest();
+            return array("status" => "error", "errorType" => "400", "msg" => "No $table returned");
+        }
+    }
 }
 
 class position

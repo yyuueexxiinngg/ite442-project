@@ -14,7 +14,7 @@
       </v-toolbar>
       <v-divider></v-divider>
       <v-list dense class="pt-0">
-        <v-list-tile v-for="item in items" :key="item.title" @click="redirect(item.route)">
+        <v-list-tile v-for="item in items" :key="item.title" @click="redirect(item.route)" v-if="checkAuth(item)">
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
@@ -100,7 +100,7 @@
     data () {
       return {
         clipped: true,
-        drawer: true, // Auto open the navigation drawer
+        drawer: false, // Auto open the navigation drawer
         fixed: true,
         items: [],
         miniVariant: false,
@@ -123,6 +123,21 @@
           this.redirect('login')
         } else {
           this.redirect('login')
+        }
+      },
+      checkAuth (route) {
+        let permissionRequired = route.permission
+        let position = this.$store.state.position
+        if (!permissionRequired) {
+          return true
+        } else if (permissionRequired === 'admin' && position === 'admin') {
+          return true
+        } else if (permissionRequired === 'manager' && (position === 'admin' || position === 'manager')) {
+          return true
+        } else if (permissionRequired === 'employee' && (position === 'admin' || position === 'manager' || position === 'employee')) {
+          return true
+        } else {
+          return false
         }
       }
     },

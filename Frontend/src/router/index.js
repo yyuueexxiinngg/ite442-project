@@ -56,7 +56,8 @@ let router = new Router({
       component: Create_Repair_Form,
       meta: {
         title: 'Create Repair Form',
-        icon: 'timeline'
+        requireAuth: 'employee',
+        icon: 'description'
       }
     }
   ]
