@@ -81,6 +81,30 @@ class mysql_helper
             return array("status" => "error", "errorType" => "400", "msg" => "No $table returned");
         }
     }
+
+    public function getRowsLike($table,$where,$like, $columns = array('*'))
+    {
+        $select = $columns[0];
+        foreach ($columns as $idx => $col) {
+            if ($idx == 0) {
+                continue;
+            }
+            $select = $select . ",$col";
+        }
+
+        $query = "SELECT $select FROM `$table` WHERE $where LIKE '$like'" ;
+        $data = $this->query($query);
+
+        if ($data) {
+            $return = array();
+            while ($row = $data->fetch_assoc()) {
+                $return[] = $row;
+            }
+            return $return;
+        } else {
+            return array();
+        }
+    }
 }
 
 class position

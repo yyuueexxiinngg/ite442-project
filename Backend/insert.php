@@ -30,7 +30,20 @@ class Insert extends mysql_helper
         $result['repair_location'] = $this->getAllRow('repair_location');;
         $result['warranty'] = $this->getAllRow('warranty');;
         $result['shipping_method'] = $this->getAllRow('shipping_method');;
+        return $result;
+    }
 
+    public function searchCustomerByName($name)
+    {
+        $like = '%' . trim($name) . '%';
+        $result = $this->getRowsLike('customer', 'customername', $like);
+        return $result;
+    }
+
+    public function searchCustomerByTel($tel)
+    {
+        $like = '%' . trim($tel) . '%';
+        $result = $this->getRowsLike('customer', 'customertel', $like);
         return $result;
     }
 }
@@ -46,6 +59,12 @@ if (isset($_POST['request'])) {
     switch ($_POST['request']) {
         case "init":
             echo json_encode($insert->init());
+        case "customer";
+            if (isset($_POST['customerName'])) {
+                echo json_encode($insert->searchCustomerByName($_POST['customerName']));
+            } elseif (isset($_POST['customerTel'])) {
+                echo json_encode($insert->searchCustomerByTel($_POST['customerTel']));
+            }
     }
 }
 

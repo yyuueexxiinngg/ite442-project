@@ -10,7 +10,9 @@ axios.defaults.baseURL = process.env.API_HOST
 axios.interceptors.request.use(
   config => {
     store.state.generalAlert = ''
-    store.state.isLoading = true
+    if (!config.disableLoading === true) {
+      store.state.isLoading = true
+    }
     if (store.state.token) {
       config.headers.Authorization = store.state.token
     }
@@ -41,7 +43,7 @@ axios.interceptors.response.use(
           router.currentRoute.path !== 'login' &&
           router.replace({
             path: 'login',
-            query: { redirect: router.currentRoute.path }
+            query: {redirect: router.currentRoute.path}
           })
       }
     }
