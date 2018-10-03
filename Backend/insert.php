@@ -66,6 +66,11 @@ if (isset($_POST['request'])) {
                 echo json_encode($insert->searchCustomerByTel($_POST['customerTel']));
             }
     }
+} elseif (file_get_contents('php://input')) {
+    if (json_decode(file_get_contents('php://input'))->create) {
+        $data = json_decode(file_get_contents('php://input'));
+        echo file_get_contents('php://input');
+    }
 }
 
 

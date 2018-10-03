@@ -31,9 +31,12 @@
                           :items="departments"
                           item-text="deptname"
                           item-value="department_id"
-                          label="Department store"
+                          label="Department Store"
                           outline
                           name="department"
+                          :rules="[v => !!v || 'Department Store is required']"
+                          hint="*Required"
+                          persistent-hint
                         ></v-select>
                       </v-flex>
 
@@ -43,9 +46,12 @@
                           :items="products"
                           item-text="productcode"
                           item-value="productcode"
-                          label="Product code"
+                          label="Product Code"
                           outline
                           name="product_code"
+                          :rules="[v => !!v || 'Product Code is required']"
+                          hint="*Required"
+                          persistent-hint
                         ></v-select>
                       </v-flex>
 
@@ -70,6 +76,9 @@
                           name="warranty_type"
                           ref="warranty_type"
                           return-object
+                          :rules="[v => !!v || 'Warranty Type is required']"
+                          hint="*Required"
+                          persistent-hint
                         ></v-select>
                       </v-flex>
 
@@ -92,6 +101,9 @@
                           label="Repair Location"
                           outline
                           name="repair_location"
+                          :rules="[v => !!v || 'Repair Location is required']"
+                          hint="*Required"
+                          persistent-hint
                         ></v-select>
                       </v-flex>
 
@@ -172,6 +184,7 @@
                             readonly
                           ></v-text-field>
                           <v-date-picker v-model="dateArrivedCompany"
+                                         :min="receiveFromCustomer"
                                          @input="$refs.dateArrivedCompany.save(dateArrivedCompany)"></v-date-picker>
                         </v-menu>
                       </v-flex>
@@ -200,6 +213,7 @@
                             readonly
                           ></v-text-field>
                           <v-date-picker v-model="dateSentFactory"
+                                         :min="dateArrivedCompany"
                                          @input="$refs.dateSentFactory.save(dateSentFactory)"></v-date-picker>
                         </v-menu>
                       </v-flex>
@@ -227,11 +241,12 @@
                             readonly
                           ></v-text-field>
                           <v-date-picker v-model="dateReceiveFromFactory"
+                                         :min="dateSentFactory"
                                          @input="$refs.dateReceiveFromFactory.save(dateReceiveFromFactory)"></v-date-picker>
                         </v-menu>
                       </v-flex>
 
-                      <v-flex xs12 md4>
+                      <v-flex xs12 md6>
                         <v-menu
                           ref="dateReturnToStore"
                           :close-on-content-click="false"
@@ -254,11 +269,12 @@
                             readonly
                           ></v-text-field>
                           <v-date-picker v-model="dateReturnToStore"
+                                         :min="dateReceiveFromFactory"
                                          @input="$refs.dateReturnToStore.save(dateReturnToStore)"></v-date-picker>
                         </v-menu>
                       </v-flex>
 
-                      <v-flex xs6 md4>
+                      <v-flex xs6 md6>
                         <v-select
                           v-model="shippingMethodSelected"
                           :items="shippingMethods"
@@ -270,12 +286,21 @@
                         ></v-select>
                       </v-flex>
 
-                      <v-flex xs6 md4>
+                      <v-flex xs6 md6>
                         <v-text-field
                           v-model="personSent"
                           label="Person Sent"
                           outline
                           name="person_sent"
+                        ></v-text-field>
+                      </v-flex>
+
+                      <v-flex xs6 md6>
+                        <v-text-field
+                          v-model="trackingCode"
+                          label="Tracking Code"
+                          outline
+                          name="tracking_code"
                         ></v-text-field>
                       </v-flex>
 
@@ -288,6 +313,7 @@
           <v-flex xs12>
             <v-divider class="mb-4"></v-divider>
           </v-flex>
+
           <v-flex xs12 v-if="!costDisable">
             <v-hover>
               <v-card
@@ -330,6 +356,9 @@
                             label="Date"
                             append-icon="event"
                             readonly
+                            :rules="[v => !!v || 'Repair Location is required']"
+                            hint="*Required"
+                            persistent-hint
                           ></v-text-field>
                           <v-date-picker v-model="proDate" @input="$refs.proDate.save(proDate)"></v-date-picker>
                         </v-menu>
@@ -340,9 +369,11 @@
               </v-card>
             </v-hover>
           </v-flex>
+
           <v-flex xs12>
             <v-divider v-if="!costDisable" class="mb-4"></v-divider>
           </v-flex>
+
           <v-flex xs12>
             <v-hover>
               <v-card
@@ -350,24 +381,25 @@
                 :class="`elevation-${hover ? 12 : 5}`"
               >
                 <v-card-title primary class="title">{{newCustomer?'Create Customer':'Select Customer'}}</v-card-title>
-                <v-form ref="receipt">
+                <v-form ref="customer">
                   <v-container>
 
                     <v-layout row wrap v-if="!newCustomer">
                       <v-flex xs12 md6>
                         <v-autocomplete
-                          v-model="model"
+                          v-model="customerSelected"
                           :items="customers"
                           :search-input.sync="searchCustomerByName"
                           :loading="customersLoading"
                           chips
                           clearable
-                          hide-details
+                          prepend-inner-icon="search"
                           hide-selected
                           item-text="customername"
                           item-value="customer_id"
                           label="Search for a customer by name"
                           solo
+                          :rules="[v => !!v || 'Customer is required']"
                         >
                           <template slot="no-data">
                             <v-list-tile>
@@ -413,18 +445,19 @@
                       </v-flex>
                       <v-flex xs12 md6>
                         <v-autocomplete
-                          v-model="model"
+                          v-model="customerSelected"
                           :items="customers"
                           :search-input.sync="searchCustomerByTel"
                           :loading="customersLoading"
                           chips
                           clearable
-                          hide-details
+                          prepend-inner-icon="search"
                           hide-selected
                           item-text="customertel"
                           item-value="customer_id"
                           label="Search for a customer by tel"
                           solo
+                          :rules="[v => !!v || 'Customer is required']"
                         >
                           <template slot="no-data">
                             <v-list-tile>
@@ -471,9 +504,31 @@
                     </v-layout>
 
                     <v-layout row wrap v-if="newCustomer">
-                      <v-flex xs12 md6>
+                      <v-flex xs6 md6>
+                        <v-text-field
+                          v-model="customerName"
+                          label="Customer Name"
+                          outline
+                          name="customer_name"
+                          :rules="[v => !!v || 'Repair Location is required']"
+                          hint="*Required"
+                          persistent-hint
+                        ></v-text-field>
+                      </v-flex>
+
+                      <v-flex xs6 md6>
+                        <v-text-field
+                          v-model="customerTel"
+                          label="Customer Tel"
+                          outline
+                          name="customer_tel"
+                          :rules="[v => !!v || 'Repair Location is required']"
+                          hint="*Required"
+                          persistent-hint
+                        ></v-text-field>
                       </v-flex>
                     </v-layout>
+
                     <v-switch
                       label="New customer"
                       v-model="newCustomer"
@@ -483,6 +538,7 @@
               </v-card>
             </v-hover>
           </v-flex>
+
           <v-flex xs12>
             <v-alert
               :value="true"
@@ -498,6 +554,50 @@
               </div>
             </v-alert>
           </v-flex>
+
+          <v-flex xs12>
+            <v-divider class="mb-4"></v-divider>
+          </v-flex>
+
+          <v-flex xs12>
+            <v-hover>
+              <!--<v-card-->
+              <!--slot-scope="{ hover }"-->
+              <!--:class="`elevation-${hover ? 12 : 5}`"-->
+              <!--&gt;-->
+              <v-form ref="submit"
+                      slot-scope="{ hover }"
+                      :class="`elevation-${hover ? 12 : 5}`">
+                <v-container>
+                  <v-layout row wrap>
+                    <v-flex xs6 md6>
+                      <v-btn
+                        color="success"
+                        large
+                        block
+                        @click="submit"
+                      >
+                        Submit
+                      </v-btn>
+                    </v-flex>
+
+                    <v-flex xs6 md6>
+                      <v-btn
+                        color="error"
+                        large
+                        block
+                        @click="clear"
+                      >
+                        Clear
+                      </v-btn>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </v-form>
+              <!--</v-card>-->
+            </v-hover>
+          </v-flex>
+
         </v-layout>
 
       </v-layout>
@@ -539,6 +639,7 @@
       shippingMethods: [],
       shippingMethodSelected: null,
       personSent: null,
+      trackingCode: null,
       purchaseDate: null,
       purchaseDateMenu: false,
       receiveFromCustomerMenu: false,
@@ -550,7 +651,9 @@
       dateReceiveFromFactoryMenu: false,
       dateReceiveFromFactory: null,
       dateReturnToStoreMenu: false,
-      dateReturnToStore: null
+      dateReturnToStore: null,
+      customerName: null,
+      customerTel: null
     }),
     mounted () {
       this.init()
@@ -558,18 +661,72 @@
     methods: {
       clear () {
         this.$refs.form.reset()
+        this.cost = 0
       },
       submit () {
-        if (this.$refs.form.validate()) {
-          var data = new URLSearchParams()
-          data.append('username', this.username)
-          data.append('password', this.password)
-          this.axios.post('login.php', data).then(
-            (res) => {
+        if (this.$refs.form.validate() && this.$refs.customer.validate()) {
+          var validate = true
+          if (this.$refs.receipt) {
+            if (!this.$refs.receipt.validate()) {
+              validate = false
             }
-          ).catch((error) => {
-            console.log(error)
-          })
+          }
+          if (validate) {
+            var data = {
+              create: true,
+              department: this.departmentSelected,
+              productCode: this.productSelected,
+              warranty: this.warrantySelected,
+              repairLocation: this.repairLocationSelected,
+              details: this.details,
+              shippingMethod: this.shippingMethodSelected,
+              personSent: this.personSent,
+              trackingCode: this.trackingCode
+            }
+            // IF the customer is new
+            if (!this.newCustomer) {
+              data.newCustomer = false
+              data.customer = this.customerSelected
+            } else {
+              data.newCustomer = true
+              data.customer = {}
+              data.customer.customerName = this.customerName
+              data.customer.customerTel = this.customerTel
+            }
+            // end of new customer
+            // if is in warranty
+            if (this.costDisable) {
+              data.newReceipt = false
+              data.cost = 0
+            } else {
+              data.newReceipt = true
+              data.cost = this.cost
+              data.receipt = {}
+              data.receipt.proNumber = this.proNumber
+              data.receipt.date = this.proDate
+            }
+            // end of warranty
+            // Fill dates
+            data.dates = {}
+            data.dates.purchaseDate = this.purchaseDate
+            data.dates.receiveFromCustomer = this.receiveFromCustomer
+            data.dates.dateArrivedCompany = this.dateArrivedCompany
+            data.dates.dateSentFactory = this.dateSentFactory
+            data.dates.receiveFromCustomer = this.receiveFromCustomer
+            data.dates.dateReturnToStore = this.dateReturnToStore
+            // end Filling dates
+            this.axios.post('insert.php', data).then(
+              (res) => {
+                console.log(res.data)
+              }
+            ).catch((error) => {
+              console.log(error)
+            })
+          } else {
+            console.log('Receipt not Validate')
+          }
+        } else {
+          console.log('not Validate')
         }
       },
       init () {
@@ -625,11 +782,13 @@
         }
       },
       warrantySelected (val) {
-        if (val.warranty_type === 'in warranty') {
-          this.costDisable = true
-          this.cost = 0
-        } else {
-          this.costDisable = false
+        if (val) {
+          if (val.warranty_type === 'in warranty') {
+            this.costDisable = true
+            this.cost = 0
+          } else {
+            this.costDisable = false
+          }
         }
       },
       proNumber (val) {
