@@ -2,7 +2,14 @@
   <v-slide-y-transition mode="out-in">
     <v-container>
       <v-layout row wrap align-center justify-center>
-
+        <v-dialog v-model="postLoadingDialog" content content-class="centered-dialog">
+          <v-container fill-height>
+            <v-layout column justify-center align-center>
+              <v-progress-circular :indeterminate="postLoading" :value="100" :size="70" :width="7" color="primary"></v-progress-circular>
+              <h1 v-if="postLoadingMsg != null">{{postLoadingMsg}}</h1>
+            </v-layout>
+          </v-container>
+        </v-dialog>
         <v-layout row wrap>
           <v-flex xs12>
             <v-hover>
@@ -653,7 +660,10 @@
       dateReturnToStoreMenu: false,
       dateReturnToStore: null,
       customerName: null,
-      customerTel: null
+      customerTel: null,
+      postLoading: true,
+      postLoadingDialog: false,
+      postLoadingMsg: null
     }),
     mounted () {
       this.init()
@@ -678,10 +688,11 @@
               productCode: this.productSelected,
               warranty: this.warrantySelected,
               repairLocation: this.repairLocationSelected,
-              details: this.details,
+              repairDetail: this.repairDetail,
               shippingMethod: this.shippingMethodSelected,
               personSent: this.personSent,
-              trackingCode: this.trackingCode
+              trackingCode: this.trackingCode,
+              repairForm: this.repairForm
             }
             // IF the customer is new
             if (!this.newCustomer) {
@@ -713,20 +724,28 @@
             data.dates.dateArrivedCompany = this.dateArrivedCompany
             data.dates.dateSentFactory = this.dateSentFactory
             data.dates.receiveFromCustomer = this.receiveFromCustomer
+            data.dates.dateReceiveFromFactory = this.dateReceiveFromFactory
             data.dates.dateReturnToStore = this.dateReturnToStore
             // end Filling dates
-            this.axios.post('insert.php', data).then(
+            this.postLoading = true
+            this.postLoadingDialog = true
+            this.postLoadingMsg = 'Creating repair form...'
+            this.axios.post('insert.php', data, {disableLoading: true}).then(
               (res) => {
                 console.log(res.data)
+                this.postLoadingMsg = res.data.msg
               }
             ).catch((error) => {
               console.log(error)
+              this.postLoadingMsg = error.data.msg
+            }).finally(() => {
+              this.postLoading = false
             })
           } else {
             console.log('Receipt not Validate')
           }
         } else {
-          console.log('not Validate')
+          console.log('Not Validate')
         }
       },
       init () {
@@ -761,7 +780,9 @@
             .catch(err => {
               console.log(err)
             })
-            .finally(() => (this.customersLoading = false))
+            .finally(() => {
+              this.customersLoading = false
+            })
         }
       },
       searchCustomerByTel (val) {
@@ -778,7 +799,9 @@
             .catch(err => {
               console.log(err)
             })
-            .finally(() => (this.customersLoading = false))
+            .finally(() => {
+              this.customersLoading = false
+            })
         }
       },
       warrantySelected (val) {
@@ -798,5 +821,14 @@
   }
 </script>
 
-<style lang="stylus">
+<style>
+  .dialog.centered-dialog,
+  .v-dialog.centered-dialog
+  {
+    background: #282c2dad;
+    box-shadow: none;
+    border-radius: 6px;
+    width: auto;
+    color: whitesmoke;
+  }
 </style>

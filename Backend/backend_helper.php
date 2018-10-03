@@ -13,6 +13,7 @@ use \Firebase\JWT\JWT;
 define('SECRET_KEY', 'ite442_project');
 define('ALGORITHM', 'HS256');
 $dev = false;
+
 //error_reporting(0);
 class mysql_helper
 {
@@ -40,12 +41,13 @@ class mysql_helper
     {
         $result = $this->conn->query($query);
 
-        if ($result->num_rows > 0) {
-            return $result;
-        } else {
-//            throw new Exception("DB connected, yet no return value, something wrong with query?");
-            return false;
+        if ($result) {
+            if ($result->num_rows > 0) {
+                return $result;
+            }
+            return true;
         }
+        return false;
     }
 
     public function close(MySQLi $conn = null)
@@ -82,7 +84,7 @@ class mysql_helper
         }
     }
 
-    public function getRowsLike($table,$where,$like, $columns = array('*'))
+    public function getRowsLike($table, $where, $like, $columns = array('*'))
     {
         $select = $columns[0];
         foreach ($columns as $idx => $col) {
@@ -92,7 +94,7 @@ class mysql_helper
             $select = $select . ",$col";
         }
 
-        $query = "SELECT $select FROM `$table` WHERE $where LIKE '$like'" ;
+        $query = "SELECT $select FROM `$table` WHERE $where LIKE '$like'";
         $data = $this->query($query);
 
         if ($data) {
@@ -104,6 +106,11 @@ class mysql_helper
         } else {
             return array();
         }
+    }
+
+    public function convertToInput($data)
+    {
+        return "'" . $data . "'";
     }
 }
 
@@ -152,10 +159,10 @@ if (!function_exists('apache_request_headers')) {
 function checkAuth($position_need = null)
 {
     global $dev;
-    if($dev){
+    if ($dev) {
         return true;
     }
-    if($position_need == position::CUSTOMER) {
+    if ($position_need == position::CUSTOMER) {
         return true;
     }
     $token = apache_request_headers()['Authorization'];
@@ -224,6 +231,7 @@ function checkParameters($parameters)
 
 }
 
-function badRequest() {
+function badRequest()
+{
     header("HTTP/1.1 400 Bad Request");
 }

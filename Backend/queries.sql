@@ -35,3 +35,15 @@ WHERE
 
 
 -- End of receipt view
+
+--  New repair id view inorder to create formatted primary key
+
+CREATE VIEW `new_repair_id_v` AS
+    SELECT
+        CONCAT(DATE_FORMAT(NOW(), '%y'),'/',RIGHT(1000 + MAX(SUBSTRING(repair_id, 4)) + 1,3)) NewRepairID
+    FROM
+        repair
+    WHERE
+        repair_id LIKE CONCAT(DATE_FORMAT(NOW(), '%y'), '%');
+
+-- enc of new repair id view
