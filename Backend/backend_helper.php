@@ -42,8 +42,10 @@ class mysql_helper
         $result = $this->conn->query($query);
 
         if ($result) {
-            if ($result->num_rows > 0) {
-                return $result;
+            if(isset($result->num_rows)){
+                if ($result->num_rows > 0) {
+                    return $result;
+                }
             }
             return true;
         }
@@ -81,6 +83,22 @@ class mysql_helper
         } else {
             badRequest();
             return array("status" => "error", "errorType" => "400", "msg" => "No $table returned");
+        }
+    }
+
+    public function getAllRowWithQuery($query)
+    {
+        $data = $this->query($query);
+
+        if ($data) {
+            $return = array();
+            while ($row = $data->fetch_assoc()) {
+                $return[] = $row;
+            }
+            return $return;
+        } else {
+            badRequest();
+            return array("status" => "error", "errorType" => "400", "msg" => "No data returned");
         }
     }
 

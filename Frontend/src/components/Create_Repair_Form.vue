@@ -730,7 +730,7 @@
             this.postLoading = true
             this.postLoadingDialog = true
             this.postLoadingMsg = 'Creating repair form...'
-            this.axios.post('insert.php', data, {disableLoading: true}).then(
+            this.axios.post('data_manipulator.php', data, {disableLoading: true}).then(
               (res) => {
                 console.log(res.data)
                 this.postLoadingMsg = res.data.msg
@@ -751,7 +751,7 @@
       init () {
         var data = new URLSearchParams()
         data.append('request', 'init')
-        this.axios.post('insert.php', data).then(
+        this.axios.post('data_manipulator.php', data).then(
           (res) => {
             var data = res.data
             this.departments = data.departments
@@ -773,7 +773,7 @@
           data.append('request', 'customer')
           data.append('customerName', val)
 
-          this.axios.post('insert.php', data, {disableLoading: true})
+          this.axios.post('data_manipulator.php', data, {disableLoading: true})
             .then(res => {
               this.customers = res.data
             })
@@ -792,7 +792,7 @@
           data.append('request', 'customer')
           data.append('customerTel', val)
 
-          this.axios.post('insert.php', data, {disableLoading: true})
+          this.axios.post('data_manipulator.php', data, {disableLoading: true})
             .then(res => {
               this.customers = res.data
             })

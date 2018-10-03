@@ -5,6 +5,7 @@ import Login from '@/components/Login'
 import Receipt from '@/components/Receipt'
 import Repair_Status from '@/components/Repair_Status'
 import Create_Repair_Form from '@/components/Create_Repair_Form'
+import Update_Repair_Form from '@/components/Update_Repair_Form'
 import store from '../../store/store'
 
 Vue.use(Router)
@@ -56,6 +57,16 @@ let router = new Router({
       component: Create_Repair_Form,
       meta: {
         title: 'Create Repair Form',
+        requireAuth: 'employee',
+        icon: 'description'
+      }
+    },
+    {
+      path: '/update_repair_form',
+      name: 'update_repair_form',
+      component: Update_Repair_Form,
+      meta: {
+        title: 'Update Repair Form',
         requireAuth: 'employee',
         icon: 'description'
       }

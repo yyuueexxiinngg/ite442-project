@@ -47,3 +47,41 @@ CREATE VIEW `new_repair_id_v` AS
         repair_id LIKE CONCAT(DATE_FORMAT(NOW(), '%y'), '%');
 
 -- enc of new repair id view
+
+
+-- View for get repair form for updating
+
+CREATE VIEW `get_repair_form_v` AS
+    SELECT
+        R.repair_id repairID,
+        R.repair_form,
+        R.cust_id,
+        C.customertel,
+        R.dept_id,
+        RC.pro_number,
+        IFNULL(RC.cost, 0) cost,
+        RC.date,
+        R.repair_details,
+        PIR.*,
+        W.warranty_type
+    FROM
+        repair R
+            LEFT JOIN
+        customer C ON R.cust_id = C.customer_id
+            LEFT JOIN
+        product_in_repair PIR ON PIR.repair_id = R.repair_id
+            LEFT JOIN
+        warranty W ON PIR.warranty_id = W.warranty_id
+            LEFT JOIN
+        receipt RC ON R.pro_number = RC.pro_number;
+
+-- Uasge
+
+SELECT
+    *
+FROM
+    get_repair_form_v
+WHERE
+    repair_id = '18/002';
+
+-- End of get repair form

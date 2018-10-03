@@ -56,7 +56,7 @@ define('DB_NAME','');
     - [ ] Repair Order
     - [ ] Custom
 - [ ] Insert
-- [ ] Update
+- [x] Update
 
 ### Frontend
 #### Customer
@@ -65,12 +65,12 @@ define('DB_NAME','');
 
 #### Employee
 - [x] Login
-- [ ] Receipt
+- [x] Receipt
 - [ ] Repair Status
 - [ ] In Progress
 - [ ] Repair Order
-- [ ] Update Repair Form
-- [ ] Create Repair Form
+- [x] Update Repair Form
+- [x] Create Repair Form
 - [ ] Custom
 
 #### Manager
