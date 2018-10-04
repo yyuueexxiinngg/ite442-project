@@ -28,6 +28,7 @@
                   :headers="headers"
                   :items="repairFormList"
                   :search="search"
+                  :rows-per-page-items="[10,25,{'text':'$vuetify.dataIterator.rowsPerPageAll','value':-1}]"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="$refs.updateDialog.openUpdateDialog(props.item.repair_id)">

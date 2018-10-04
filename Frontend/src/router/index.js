@@ -59,7 +59,7 @@ let router = new Router({
       meta: {
         title: 'In Progress',
         requireAuth: 'employee',
-        icon: 'timeline'
+        icon: 'airport_shuttle'
       }
     },
     {
@@ -79,7 +79,7 @@ let router = new Router({
       meta: {
         title: 'Update Repair Form',
         requireAuth: 'employee',
-        icon: 'description'
+        icon: 'edit'
       }
     }
   ]

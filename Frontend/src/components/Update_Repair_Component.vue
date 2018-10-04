@@ -703,8 +703,26 @@
     },
     methods: {
       deleteForm (repairID) {
-        this.deleteConfirmDialog = false
-        this.closeUpdateDialog()
+        var data = {
+          create: false,
+          update: false,
+          delete: true,
+          repairID: repairID
+        }
+        this.postLoading = true
+        this.axios.post('data_manipulator.php', data, {disableLoading: true}).then(
+          (res) => {
+            console.log(res.data)
+            this.postLoadingMsg = res.data.msg
+            this.deleteConfirmDialog = false
+            this.closeUpdateDialog()
+          }
+        ).catch((error) => {
+          console.log(error)
+          this.postLoadingMsg = error.data.msg
+        }).finally(() => {
+          this.postLoading = false
+        })
         this.init()
       },
       openUpdateDialog (repairID) {

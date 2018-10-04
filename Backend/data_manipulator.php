@@ -61,6 +61,24 @@ class DataManipulator extends mysql_helper
         return $result;
     }
 
+    public function deleteRepairForm($data)
+    {
+        $repairID = $this->convertToInput($data->repairID);
+        $query = "DELETE FROM `product_in_repair` WHERE `repair_id`=$repairID;";
+        if (!$this->query($query)) {
+            echo json_encode(array("status" => "error", "errorType" => "400", "msg" => "Failed to Delete Product in Repair"));
+            return;
+        }
+
+        $query = "DELETE FROM `ite442_project`.`repair` WHERE `repair_id`=$repairID;";
+        if (!$this->query($query)) {
+            echo json_encode(array("status" => "error", "errorType" => "400", "msg" => "Failed to Delete Repair"));
+            return;
+        }
+
+        echo json_encode(array("status" => "success", "code" => "200", "msg" => "Successfully delete repair form!"));
+    }
+
     public function updateOrCreateForm($data, $create = false)
     {
 //        error_reporting(0);
@@ -87,7 +105,6 @@ class DataManipulator extends mysql_helper
         $dateReceiveFromFactory = $data->dates->dateReceiveFromFactory ? $this->convertToInput($data->dates->dateReceiveFromFactory) : "NULL";
         $dateReturnToStore = $data->dates->dateReturnToStore ? $this->convertToInput($data->dates->dateReturnToStore) : "NULL";
 
-//        echo json_encode($data);
         if ($data->newCustomer) {
             $customerName = $data->customer->customerName;
             $customerTel = $data->customer->customerTel;
@@ -230,6 +247,8 @@ if (isset($_POST['request'])) {
             $dm->updateOrCreateForm($data, true);
         elseif ($data->update)
             $dm->updateOrCreateForm($data);
+        elseif ($data->delete)
+            $dm->deleteRepairForm($data);
     }
 }
 
