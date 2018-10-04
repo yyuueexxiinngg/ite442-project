@@ -1,6 +1,7 @@
 <template>
   <v-slide-y-transition mode="out-in">
     <v-container>
+      <UpdateRepairComponent ref="updateDialog"/>
       <v-layout row wrap align-center justify-center>
         <v-layout row wrap justify-center>
           <v-flex xs12>
@@ -11,7 +12,7 @@
             <template>
               <v-card class="elevation-5">
                 <v-card-title>
-                  Repair Form List
+                  In Progress List
                   <v-spacer></v-spacer>
                   <v-text-field
                     v-model="search"
@@ -26,16 +27,19 @@
 
                 <v-data-table
                   :headers="headers"
-                  :items="repairFormList"
+                  :items="inProgressList"
                   :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="$refs.updateDialog.openUpdateDialog(props.item.repair_id)">
                       <td>{{ props.item.repair_id }}</td>
-                      <td>{{ props.item.repair_form }}</td>
-                      <td>{{ props.item.customername }}</td>
-                      <td>{{ props.item.customertel }}</td>
-                      <td>{{ props.item.cost }}</td>
+                      <td>{{ props.item.prod_code }}</td>
+                      <td>{{ props.item.warranty_type }}</td>
+                      <td>{{ props.item.Address }}</td>
+                      <td>{{ }}</td>
+                      <td>{{ }}</td>
+                      <td>{{ props.item.send_method? props.item.person_sent:'Null'}}</td>
+                      <td>{{ props.item.person_sent? props.item.person_sent:'Null' }}</td>
                     </tr>
                   </template>
                   <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -51,19 +55,13 @@
             </template>
           </v-flex>
         </v-layout>
-
-        <UpdateRepairComponent ref="updateDialog"/>
-
       </v-layout>
-
-
     </v-container>
   </v-slide-y-transition>
 </template>
 
 <script>
   import UpdateRepairComponent from './Update_Repair_Component'
-
   export default {
     name: 'update_repair_form',
     components: {
@@ -73,12 +71,15 @@
       search: '',
       headers: [
         {text: 'Repair ID', align: 'left', value: 'repair_id'},
-        {text: 'Repair Form', value: 'repair_form'},
-        {text: 'Customer Name', value: 'customername'},
-        {text: 'Customer Tel', value: 'customertel'},
-        {text: 'Cost', value: 'cost'}
+        {text: 'Product Code', value: 'prod_code'},
+        {text: 'Warranty', value: 'customername'},
+        {text: 'Repair Location', value: 'customertel'},
+        {text: 'Dates', value: 'cost'},
+        {text: 'Days', value: 'cost'},
+        {text: 'Send Method', value: 'cost'},
+        {text: 'Person sent', value: 'cost'}
       ],
-      repairFormList: []
+      inProgressList: []
     }),
     mounted () {
       this.init()
@@ -86,28 +87,20 @@
     methods: {
       init () {
         var data = new URLSearchParams()
-        data.append('request', 'updateInit')
-        this.axios.post('data_manipulator.php', data).then(
+        data.append('request', 'inProgress')
+        this.axios.post('view.php', data).then(
           (res) => {
             var data = res.data
-            this.repairFormList = data
+            this.inProgressList = data
           }
         ).catch((error) => {
           console.log(error)
         })
       }
-    },
-    watch: {}
+    }
   }
 </script>
 
-<style>
-  .dialog.centered-dialog,
-  .v-dialog.centered-dialog {
-    background: #282c2dad;
-    box-shadow: none;
-    border-radius: 6px;
-    width: auto;
-    color: whitesmoke;
-  }
+<style scoped>
+
 </style>

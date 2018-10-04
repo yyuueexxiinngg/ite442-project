@@ -55,7 +55,7 @@ define('DB_NAME','');
     - [ ] In Progress
     - [ ] Repair Order
     - [ ] Custom
-- [ ] Insert
+- [x] Insert
 - [x] Update
 
 ### Frontend

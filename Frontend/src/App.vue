@@ -34,7 +34,7 @@
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title v-text="title" class="white--text"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn flat @click="logFunc">{{this.$store.state.token ? 'LOGOUT' : 'LOGIN'}}</v-btn>
+      <v-btn flat @click="logFunc">{{this.$store.state.token ? 'LOGOUT' : 'EMPLOYEE LOGIN'}}</v-btn>
     </v-toolbar>
     <main>
       <v-content>

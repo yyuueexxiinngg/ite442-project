@@ -6,6 +6,7 @@ import Receipt from '@/components/Receipt'
 import Repair_Status from '@/components/Repair_Status'
 import Create_Repair_Form from '@/components/Create_Repair_Form'
 import Update_Repair_Form from '@/components/Update_Repair_Form'
+import In_Progerss from '@/components/In_Progress'
 import store from '../../store/store'
 
 Vue.use(Router)
@@ -48,6 +49,16 @@ let router = new Router({
       component: Repair_Status,
       meta: {
         title: 'Repair Status',
+        icon: 'timeline'
+      }
+    },
+    {
+      path: '/in_progress',
+      name: 'in_progress',
+      component: In_Progerss,
+      meta: {
+        title: 'In Progress',
+        requireAuth: 'employee',
         icon: 'timeline'
       }
     },

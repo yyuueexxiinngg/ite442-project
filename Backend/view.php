@@ -53,6 +53,29 @@ class View extends AbstractView
         }
     }
 
+    public function getInProgress()
+    {
+        $qurey= "SELECT 
+                    R.repair_id,
+                    PIR.prod_code,
+                    W.warranty_type,
+                    RL.Address,
+                    PIR.send_method,
+                    PIR.person_sent
+                FROM
+                    ite442_project.repair R
+                        LEFT JOIN
+                    product_in_repair PIR ON R.repair_id = PIR.repair_id
+                        LEFT JOIN
+                    warranty W ON PIR.warranty_id = W.warranty_id
+                        LEFT JOIN
+                    repair_location RL ON PIR.repair_loc = RL.repair_loc_id
+                WHERE
+                    PIR.date_received_factory IS NULL;";
+
+        return $this->getAllRowWithQuery($qurey);
+    }
+
     public function getFuncDemo()
     {
         $query = "SELECT * FROM employee";
@@ -85,6 +108,9 @@ $view = new View();
 switch ($request) {
     case 'receipt':
         echo json_encode($view->getReceipt());
+        break;
+    case 'inProgress':
+        echo json_encode($view->getInProgress());
 }
 
 

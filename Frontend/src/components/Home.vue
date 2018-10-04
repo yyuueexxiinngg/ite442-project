@@ -19,11 +19,13 @@
       <v-divider class="mb-2"></v-divider>
       <v-layout>
       </v-layout>
+      <UpdateRepairComponent ref="updateDialog" />
     </v-layout>
   </v-slide-y-transition>
 </template>
 
 <script>
+  import UpdateRepairComponent from './Update_Repair_Component'
   export default {
     name: 'home',
     data: () => ({
@@ -31,6 +33,9 @@
     mounted () {
     },
     methods: {
+    },
+    components: {
+      UpdateRepairComponent
     }
   }
 </script>

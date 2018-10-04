@@ -233,4 +233,6 @@ if (isset($_POST['request'])) {
     }
 }
 
+$dm->close();
+
 
