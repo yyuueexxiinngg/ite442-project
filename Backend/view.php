@@ -59,9 +59,10 @@ class View extends AbstractView
                     R.repair_id,
                     PIR.prod_code,
                     W.warranty_type,
-                    RL.Address,
+                    RL.Address repair_loc,
                     PIR.send_method,
-                    PIR.person_sent
+                    PIR.person_sent,
+                    DATEDIFF(NOW(),PIR.date_rec_store) day_past
                 FROM
                     ite442_project.repair R
                         LEFT JOIN

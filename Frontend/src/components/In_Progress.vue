@@ -35,11 +35,10 @@
                       <td>{{ props.item.repair_id }}</td>
                       <td>{{ props.item.prod_code }}</td>
                       <td>{{ props.item.warranty_type }}</td>
-                      <td>{{ props.item.Address }}</td>
-                      <td>{{ }}</td>
-                      <td>{{ }}</td>
-                      <td>{{ props.item.send_method? props.item.person_sent:'Null'}}</td>
-                      <td>{{ props.item.person_sent? props.item.person_sent:'Null' }}</td>
+                      <td>{{ props.item.repair_loc }}</td>
+                      <td>{{ props.item.day_past }}</td>
+                      <td>{{ props.item.send_method? props.item.person_sent:'No Value'}}</td>
+                      <td>{{ props.item.person_sent? props.item.person_sent:'No Value' }}</td>
                     </tr>
                   </template>
                   <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -72,12 +71,11 @@
       headers: [
         {text: 'Repair ID', align: 'left', value: 'repair_id'},
         {text: 'Product Code', value: 'prod_code'},
-        {text: 'Warranty', value: 'customername'},
-        {text: 'Repair Location', value: 'customertel'},
-        {text: 'Dates', value: 'cost'},
-        {text: 'Days', value: 'cost'},
-        {text: 'Send Method', value: 'cost'},
-        {text: 'Person sent', value: 'cost'}
+        {text: 'Warranty', value: 'warranty_type'},
+        {text: 'Repair Location', value: 'repair_loc'},
+        {text: 'Days Past', value: 'day_past'},
+        {text: 'Send Method', value: 'send_method'},
+        {text: 'Person sent', value: 'person_sent'}
       ],
       inProgressList: []
     }),

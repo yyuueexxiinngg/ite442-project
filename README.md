@@ -52,7 +52,7 @@ define('DB_NAME','');
 - [ ] View
     - [x] Receipt
     - [ ] Repair Status
-    - [ ] In Progress
+    - [x] In Progress
     - [ ] Repair Order
     - [ ] Custom
 - [x] Insert
@@ -67,7 +67,7 @@ define('DB_NAME','');
 - [x] Login
 - [x] Receipt
 - [ ] Repair Status
-- [ ] In Progress
+- [x] In Progress
 - [ ] Repair Order
 - [x] Update Repair Form
 - [x] Create Repair Form

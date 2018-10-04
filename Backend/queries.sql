@@ -85,3 +85,27 @@ WHERE
     repair_id = '18/002';
 
 -- End of get repair form
+
+
+-- In Progress
+
+SELECT
+    R.repair_id,
+    PIR.prod_code,
+    W.warranty_type,
+    RL.Address repair_loc,
+    PIR.send_method,
+    PIR.person_sent,
+	  DATEDIFF(NOW(),PIR.date_rec_store) day_past
+FROM
+    ite442_project.repair R
+        LEFT JOIN
+    product_in_repair PIR ON R.repair_id = PIR.repair_id
+        LEFT JOIN
+    warranty W ON PIR.warranty_id = W.warranty_id
+        LEFT JOIN
+    repair_location RL ON PIR.repair_loc = RL.repair_loc_id
+WHERE
+    PIR.date_received_factory IS NULL;
+
+-- End of in progress
