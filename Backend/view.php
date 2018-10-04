@@ -53,28 +53,22 @@ class View extends AbstractView
         }
     }
 
+    public function getAllRepairID()
+    {
+        return $this->getAllRowWithQuery("SELECT repair_id FROM repair;");
+    }
+
+    public function getRepairOrder($repairID)
+    {
+        $repairID = $this->convertToInput($repairID);
+        return $this->getAllRowWithQuery("SELECT * FROM get_repair_order WHERE repair_id=$repairID;")[0];
+    }
+
     public function getInProgress()
     {
-        $qurey= "SELECT 
-                    R.repair_id,
-                    PIR.prod_code,
-                    W.warranty_type,
-                    RL.Address repair_loc,
-                    PIR.send_method,
-                    PIR.person_sent,
-                    DATEDIFF(NOW(),PIR.date_rec_store) day_past
-                FROM
-                    ite442_project.repair R
-                        LEFT JOIN
-                    product_in_repair PIR ON R.repair_id = PIR.repair_id
-                        LEFT JOIN
-                    warranty W ON PIR.warranty_id = W.warranty_id
-                        LEFT JOIN
-                    repair_location RL ON PIR.repair_loc = RL.repair_loc_id
-                WHERE
-                    PIR.date_received_factory IS NULL;";
+        $query = "SELECT * FROM get_in_progress_v";
 
-        return $this->getAllRowWithQuery($qurey);
+        return $this->getAllRowWithQuery($query);
     }
 
     public function getFuncDemo()
@@ -112,6 +106,14 @@ switch ($request) {
         break;
     case 'inProgress':
         echo json_encode($view->getInProgress());
+        break;
+    case 'repairOrder':
+        if (!isset($_POST['get'])) {
+            echo json_encode($view->getAllRepairID());
+        } else {
+            echo json_encode($view->getRepairOrder($_POST['get']));
+        }
+        break;
 }
 
 

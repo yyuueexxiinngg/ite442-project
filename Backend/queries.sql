@@ -109,3 +109,45 @@ WHERE
     PIR.date_received_factory IS NULL;
 
 -- End of in progress
+
+
+-- Get repair order
+
+CREATE VIEW `get_repair_order_v` AS
+    SELECT
+        R.repair_id,
+        R.repair_form,
+        PIR.prod_code,
+        R.repair_details,
+        DATE_FORMAT(NOW(), '%Y/%m/%d') Date
+    FROM
+        repair R
+            LEFT JOIN
+        product_in_repair PIR ON R.repair_id = PIR.repair_id;
+
+-- End of get repair order
+
+
+-- Get in progress
+
+CREATE VIEW `get_in_progress_v` AS
+    SELECT
+        R.repair_id,
+        PIR.prod_code,
+        W.warranty_type,
+        RL.Address repair_loc,
+        PIR.send_method,
+        PIR.person_sent,
+        DATEDIFF(NOW(), PIR.date_rec_store) day_past
+    FROM
+        ite442_project.repair R
+            LEFT JOIN
+        product_in_repair PIR ON R.repair_id = PIR.repair_id
+            LEFT JOIN
+        warranty W ON PIR.warranty_id = W.warranty_id
+            LEFT JOIN
+        repair_location RL ON PIR.repair_loc = RL.repair_loc_id
+    WHERE
+        PIR.date_received_factory IS NULL;
+
+-- End of get in progress
