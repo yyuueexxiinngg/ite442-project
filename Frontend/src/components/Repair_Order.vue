@@ -134,7 +134,7 @@
   import 'print-js'
 
   export default {
-    name: 'update_repair_form',
+    name: 'repair_order',
     data: () => ({
       repairID: '',
       headers: [

@@ -86,14 +86,17 @@ class mysql_helper
         }
     }
 
-    public function getAllRowWithQuery($query)
+    public function getAllRowWithQuery($query, $select=false)
     {
         $data = $this->query($query);
 
         if ($data) {
             $return = array();
             while ($row = $data->fetch_assoc()) {
-                $return[] = $row;
+                if(!$select)
+                    $return[] = $row;
+                elseif ($select)
+                    $return[] = $row[$select];
             }
             return $return;
         } else {

@@ -3,11 +3,12 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
 import Receipt from '@/components/Receipt'
-import Repair_Status from '@/components/Repair_Status'
 import Create_Repair_Form from '@/components/Create_Repair_Form'
 import Update_Repair_Form from '@/components/Update_Repair_Form'
 import In_Progress from '@/components/In_Progress'
 import Reapir_Order from '@/components/Repair_Order'
+import Views from '@/components/Views'
+import Manage_Stock from '@/components/Manage_Stock'
 import store from '../../store/store'
 
 Vue.use(Router)
@@ -42,15 +43,6 @@ let router = new Router({
       meta: {
         title: 'Receipt',
         icon: 'receipt'
-      }
-    },
-    {
-      path: '/repair_status',
-      name: 'repair_status',
-      component: Repair_Status,
-      meta: {
-        title: 'Repair Status',
-        icon: 'timeline'
       }
     },
     {
@@ -91,6 +83,26 @@ let router = new Router({
         title: 'Repair Order',
         requireAuth: 'employee',
         icon: 'assignment'
+      }
+    },
+    {
+      path: '/views',
+      name: 'views',
+      component: Views,
+      meta: {
+        title: 'Views',
+        requireAuth: 'employee',
+        icon: 'visibility'
+      }
+    },
+    {
+      path: '/manage_stock',
+      name: 'manage_stock',
+      component: Manage_Stock,
+      meta: {
+        title: 'Manage Stock',
+        requireAuth: 'manager',
+        icon: 'settings'
       }
     }
   ]

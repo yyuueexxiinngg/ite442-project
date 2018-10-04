@@ -63,7 +63,7 @@
 <script>
   import UpdateRepairComponent from './Update_Repair_Component'
   export default {
-    name: 'update_repair_form',
+    name: 'in_progress',
     components: {
       UpdateRepairComponent
     },

@@ -151,3 +151,34 @@ CREATE VIEW `get_in_progress_v` AS
         PIR.date_received_factory IS NULL;
 
 -- End of get in progress
+
+-- Get views
+
+CREATE VIEW `get_views_v` AS
+    SELECT
+        R.repair_id,
+        R.repair_form,
+        R.repair_details,
+        D.deptname,
+        C.customername,
+        PIR.prod_code,
+        W.warranty_type,
+        PIR.date_rec_store,
+        PIR.date_arrive_company,
+        PIR.date_sent_factory,
+        DATEDIFF(NOW(), PIR.date_rec_store) days,
+        RL.Address
+    FROM
+        repair R
+            LEFT JOIN
+        product_in_repair PIR ON R.repair_id = PIR.repair_id
+            LEFT JOIN
+        department D ON R.dept_id = D.department_id
+            LEFT JOIN
+        customer C ON R.cust_id = C.customer_id
+            LEFT JOIN
+        repair_location RL ON PIR.repair_loc = RL.repair_loc_id
+            LEFT JOIN
+        warranty W ON PIR.warranty_id = W.warranty_id;
+
+-- End of get views

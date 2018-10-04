@@ -47,6 +47,13 @@ class DataManipulator extends mysql_helper
         return $result[0];
     }
 
+    public function getProductList()
+    {
+        $query = "SELECT * FROM product;";
+        $result = $this->getAllRowWithQuery($query);
+        return $result;
+    }
+
     public function searchCustomerByName($name)
     {
         $like = '%' . trim($name) . '%';
@@ -239,6 +246,9 @@ if (isset($_POST['request'])) {
         case "getRepairForm":
             echo json_encode($dm->getRepairForm($_POST['repairID']));
             return;
+        case "getProductList":
+            echo json_encode($dm->getProductList());
+            break;
     }
 } elseif (file_get_contents('php://input')) {
     if (json_decode(file_get_contents('php://input'))) {

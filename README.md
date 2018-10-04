@@ -55,6 +55,7 @@ define('DB_NAME','');
     - [x] In Progress
     - [x] Repair Order
     - [ ] Custom
+    - [x] Views
 - [x] Insert
 - [x] Update
 
@@ -72,6 +73,7 @@ define('DB_NAME','');
 - [x] Update Repair Form
 - [x] Create Repair Form
 - [ ] Custom
+- [x] Views
 
 #### Manager
 - [ ] Manager Page
