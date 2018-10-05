@@ -101,7 +101,7 @@ class mysql_helper
             return $return;
         } else {
             badRequest();
-            return array("status" => "error", "errorType" => "400", "msg" => "No data returned");
+            return array("status" => "error", "errorType" => "400", "msg" => "No data returned".$query);
         }
     }
 

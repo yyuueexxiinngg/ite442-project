@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import Login from '@/components/Login'
 import Receipt from '@/components/Receipt'
 import Create_Repair_Form from '@/components/Create_Repair_Form'
+import Repair_Status from '@/components/Repair_Status'
 import Update_Repair_Form from '@/components/Update_Repair_Form'
 import In_Progress from '@/components/In_Progress'
 import Reapir_Order from '@/components/Repair_Order'
@@ -17,7 +18,7 @@ let router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
       component: Home,
       meta: {
@@ -37,12 +38,21 @@ let router = new Router({
       }
     },
     {
-      path: '/receipt',
+      path: '/',
       name: 'receipt',
       component: Receipt,
       meta: {
         title: 'Receipt',
         icon: 'receipt'
+      }
+    },
+    {
+      path: '/repair_status',
+      name: 'Repair Status',
+      component: Repair_Status,
+      meta: {
+        title: 'Repair Status',
+        icon: 'timeline'
       }
     },
     {

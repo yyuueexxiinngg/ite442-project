@@ -40,18 +40,56 @@ class DataManipulator extends mysql_helper
         return $result;
     }
 
+    public function manageInit()
+    {
+        $result = array();
+        $result['productList'] = $this->getAllRow('product');
+        $result['departmentList'] = $this->getAllRow('department');
+        $result['warrantyList'] = $this->getAllRow('warranty');
+        $result['repairLocationList'] = $this->getAllRow('repair_location');
+        $result['shippingMethodList'] = $this->getAllRow('shipping_method');
+        return $result;
+    }
+
+    public function manageUpdate($data)
+    {
+        $type = $data->type;
+        $idName = $data->idName;
+        $id = $this->convertToInput($data->id);
+        $attr = $data->attr;
+        $content = $this->convertToInput($data->content);
+        $query = "UPDATE `$type` SET `$attr`=$content WHERE `$idName` = $id";
+
+        if (!$this->query($query)) {
+            echo json_encode(array("status" => "error", "errorType" => "400", "msg" => "Failed to Update data!"));
+            return;
+        }
+
+        echo json_encode(array("status" => "success", "errorType" => "200", "msg" => "Successfully update " . $type));
+        return;
+    }
+
+    public function addProduct($data)
+    {
+        $productCode = $this->convertToInput($data->productCode);
+        $productDetail = $this->convertToInput($data->productDetail);
+        $productPrice = $this->convertToInput($data->productPrice);
+        $productSize = $this->convertToInput($data->productSize);
+        $query = "INSERT INTO `product` (`productcode`, `description`, `price`, `size`) VALUES ($productCode, $productDetail, $productPrice,$productSize);";
+        if (!$this->query($query)) {
+            echo json_encode(array("status" => "error", "errorType" => "400", "msg" => "Failed to add product!"));
+            return;
+        }
+
+        echo json_encode(array("status" => "success", "errorType" => "200", "msg" => "Successfully create new product!"));
+        return;
+    }
+
     public function getRepairForm($repairID)
     {
         $query = "SELECT * FROM get_repair_form_v WHERE repair_id = '$repairID';";
         $result = $this->getAllRowWithQuery($query);
         return $result[0];
-    }
-
-    public function getProductList()
-    {
-        $query = "SELECT * FROM product;";
-        $result = $this->getAllRowWithQuery($query);
-        return $result;
     }
 
     public function searchCustomerByName($name)
@@ -243,11 +281,26 @@ if (isset($_POST['request'])) {
         case "updateInit":
             echo json_encode($dm->updateInit());
             break;
+        case "manageInit":
+            echo json_encode($dm->manageInit());
+            break;
         case "getRepairForm":
             echo json_encode($dm->getRepairForm($_POST['repairID']));
             return;
         case "getProductList":
-            echo json_encode($dm->getProductList());
+            echo json_encode($dm->getAllRow('product'));
+            break;
+        case "getDepartmentList":
+            echo json_encode($dm->getAllRow('department'));
+            break;
+        case "getWarrantyList":
+            echo json_encode($dm->getAllRow('warranty'));
+            break;
+        case "getRepairLocationList":
+            echo json_encode($dm->getAllRow('repair_location'));
+            break;
+        case "getShippingMethodList":
+            echo json_encode($dm->getAllRow('shipping_method'));
             break;
     }
 } elseif (file_get_contents('php://input')) {
@@ -259,6 +312,12 @@ if (isset($_POST['request'])) {
             $dm->updateOrCreateForm($data);
         elseif ($data->delete)
             $dm->deleteRepairForm($data);
+        elseif ($data->manageUpdate)
+            $dm->manageUpdate($data);
+        elseif ($data->addProduct)
+            echo $dm->addProduct($data);
+
+
     }
 }
 
